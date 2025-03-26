@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Exam Page</title>
+    <style>
+        :root {
+            --primary-color: #007BFF; 
+            --accent-color: #0056b3; 
+            --background-color: #f4f4f4;
+            --text-color: #333333; 
+            --danger-color: #ff3e3e; 
+            --light-color: #ffffff; 
+            --highlight-color: #fce4ec; 
+            --highlight-border: #f48fb1; 
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .exam-container {
+            max-width: 800px;
+            margin: 80px auto 40px auto;
+            background: var(--light-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--light-color);
+            background: var(--danger-color);
+            padding: 10px 15px;
+            border-radius: 20px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(255, 62, 62, 0.3);
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--highlight-border);
+            border-radius: 10px;
+            background: var(--highlight-color);
+        }
+
+        .question h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .marks {
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: var(--light-color);
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--primary-color);
+            margin-left: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            margin-top: 10px;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            resize: vertical;
+            transition: box-shadow 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 20px;
+            font-size: 18px;
+            color: var(--light-color);
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(1);
+        }
+
+        @media (max-width: 768px) {
+            .exam-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .question h2 {
+                font-size: 18px;
+            }
+
+            button {
+                font-size: 16px;
+            }
+
+            .timer {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+    <script>
+        let timeLeft = 3600; 
+
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                alert("Tab switching is not allowed!");
+            }
+        });
+
+        function goFullScreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            const interval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(interval);
+                    alert("Time's up! Submitting the exam.");
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function submitExam() {
+            const answers = [];
+            document.querySelectorAll('.question').forEach((question) => {
+                const questionId = question.getAttribute('data-id');
+                const answer = question.querySelector('textarea').value;
+                answers.push({ question_id: questionId, answer });
+            });
+
+            
+        }
+
+        window.onload = () => {
+            goFullScreen();
+            startTimer();
+        };
+        function startExam() {
+  
+        document.querySelector('.start-screen').style.display = 'none';
+
+   
+        document.querySelector('.exam-container').style.display = 'block';
+
+      
+        goFullScreen();
+        startTimer();
+    }
+    </script>
+</head>
+<body>
+    <div class="timer" id="timer"></div>
+    <div class="start-screen">
+    <button onclick="startExam()" style="padding: 20px; font-size: 18px;">Start Exam</button>
+    </div>
+    <div class="exam-container">
+        <h1>Exam: {{ exam_id }}</h1>
+        <form id="exam-form">
+            {% for question in questions %}
+                <div class="question" data-id="{{ question[0] }}">
+                    <h2>Q{{ loop.index }}. {{ question[1] }}
+                        <span class="marks">({{ question[2] }} marks)</span>
+                    </h2>
+                    <textarea placeholder="Write your answer here..."></textarea>
+                </div>
+            {% endfor %}
+            <button type="button" onclick="submitExam()">Submit Exam</button>
+        </form>
+    </div>
+</body>
+</html>

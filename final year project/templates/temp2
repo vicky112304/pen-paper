@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background: #f4f4f4;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #2A3663;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        .sidebar h2 { text-align: center; }
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover { background: #1c2541; }
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            width: 100%;
+        }
+        .section { display: none; }
+        .section.active { display: block; }
+        table { width: 100%; margin-top: 20px; }
+        .btn { margin: 5px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <a onclick="showContent('students')"><i class="fas fa-user-graduate"></i> Students</a>
+        <a onclick="showContent('teachers')"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+        <a onclick="showContent('departments')"><i class="fas fa-building"></i> Departments</a>
+        <a onclick="showContent('batches')"><i class="fas fa-users"></i> Batches</a>
+        <a onclick="showContent('exams')"><i class="fas fa-clipboard-list"></i> Exams</a>
+    </div>
+    <div class="main-content">
+        <!-- Students Section -->
+        <section id="students" class="section active">
+            <h2>Manage Students</h2>
+            <button class="btn btn-success" onclick="showModal('studentModal')">Add Student</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Batch</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Teachers Section -->
+        <section id="teachers" class="section">
+            <h2>Manage Teachers</h2>
+            <button class="btn btn-success" onclick="showModal('teacherModal')">Add Teacher</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="teacherTableBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Departments Section -->
+        <section id="departments" class="section">
+            <h2>Manage Departments</h2>
+            <button class="btn btn-success" onclick="showModal('departmentModal')">Add Department</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="departmentTableBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Batches Section -->
+        <section id="batches" class="section">
+            <h2>Manage Batches</h2>
+            <button class="btn btn-success" onclick="showModal('batchModal')">Add Batch</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="batchTableBody"></tbody>
+            </table>
+        </section>
+
+        <!-- Exams Section -->
+        <section id="exams" class="section">
+            <h2>Manage Exams</h2>
+            <button class="btn btn-success" onclick="showModal('examModal')">Add Exam</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Time Limit</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="examTableBody"></tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Modals for Add/Edit Forms -->
+    <div id="studentModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Student</h5>
+                    <button type="button" class="btn-close" onclick="closeModal('studentModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="studentName" class="form-control" placeholder="Name">
+                    <input type="email" id="studentEmail" class="form-control mt-2" placeholder="Email">
+                    <input type="text" id="studentBatch" class="form-control mt-2" placeholder="Batch">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="addStudent()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="teacherModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Teacher</h5>
+                    <button type="button" class="btn-close" onclick="closeModal('teacherModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="teacherName" class="form-control" placeholder="Name">
+                    <input type="email" id="teacherEmail" class="form-control mt-2" placeholder="Email">
+                    <input type="text" id="teacherDepartment" class="form-control mt-2" placeholder="Department">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="addTeacher()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="departmentModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Department</h5>
+                    <button type="button" class="btn-close" onclick="closeModal('departmentModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="departmentName" class="form-control" placeholder="Name">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="addDepartment()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="batchModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Batch</h5>
+                    <button type="button" class="btn-close" onclick="closeModal('batchModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="batchName" class="form-control" placeholder="Name">
+                    <input type="text" id="batchDepartment" class="form-control mt-2" placeholder="Department">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="addBatch()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="examModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Exam</h5>
+                    <button type="button" class="btn-close" onclick="closeModal('examModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="examName" class="form-control" placeholder="Name">
+                    <input type="date" id="examDate" class="form-control mt-2" placeholder="Date">
+                    <input type="time" id="examTime" class="form-control mt-2" placeholder="Time">
+                    <input type="number" id="examTimeLimit" class="form-control mt-2" placeholder="Time Limit (minutes)">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="addExam()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showContent(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            fetchData(`/get_${sectionId}`, `${sectionId}TableBody`);
+        }
+        function showModal(modalId) { document.getElementById(modalId).style.display = 'block'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function fetchData(endpoint, tableBodyId) {
+            fetch(endpoint)
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.getElementById(tableBodyId);
+                    tableBody.innerHTML = '';
+                    data.forEach(item => {
+                        tableBody.innerHTML += `
+                            <tr>
+                                <td>${item.id}</td>
+                                <td>${item.name || ''}</td>
+                                <td>${item.email || ''}</td>
+                                <td>${item.batch || item.department || item.time || ''}</td>
+                                <td>${item.time_limit || ''}</td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="deleteItem('${endpoint}', ${item.id})">Delete</button>
+                                </td>
+                            </tr>`;
+                    });
+                });
+        }
+        function addStudent() {
+            let name = document.getElementById('studentName').value;
+            let email = document.getElementById('studentEmail').value;
+            let batch = document.getElementById('studentBatch').value;
+            fetch('/add_student', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, batch })
+            }).then(() => {
+                fetchData('/get_students', 'studentTableBody');
+                closeModal('studentModal');
+            });
+        }
+        function addTeacher() {
+            let name = document.getElementById('teacherName').value;
+            let email = document.getElementById('teacherEmail').value;
+            let department = document.getElementById('teacherDepartment').value;
+            fetch('/add_teacher', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, department })
+            }).then(() => {
+                fetchData('/get_teachers', 'teacherTableBody');
+                closeModal('teacherModal');
+            });
+        }
+        function addDepartment() {
+            let name = document.getElementById('departmentName').value;
+            fetch('/add_department', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            }).then(() => {
+                fetchData('/get_departments', 'departmentTableBody');
+                closeModal('departmentModal');
+            });
+        }
+        function addBatch() {
+            let name = document.getElementById('batchName').value;
+            let department = document.getElementById('batchDepartment').value;
+            fetch('/add_batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, department })
+            }).then(() => {
+                fetchData('/get_batches', 'batchTableBody');
+                closeModal('batchModal');
+            });
+        }
+        function addExam() {
+            let name = document.getElementById('examName').value;
+            let date = document.getElementById('examDate').value;
+            let time = document.getElementById('examTime').value;
+            let timeLimit = document.getElementById('examTimeLimit').value;
+            fetch('/add_exam', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, date, time, timeLimit })
+            }).then(() => {
+                fetchData('/get_exams', 'examTableBody');
+                closeModal('examModal');
+            });
+        }
+        function deleteItem(endpoint, id) {
+            fetch(endpoint.replace('get_', 'delete_'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            }).then(() => fetchData(endpoint, endpoint.replace('/get_', '') + 'TableBody'));
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchData('/get_students', 'studentTableBody');
+        });
+    </script>
+</body>
+</html>

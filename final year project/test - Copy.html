@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Test - Exam Portal</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-bg: #faf6e3;
+        --secondary-bg: #d8dbbd;
+        --accent-color: #b59f78;
+        --text-color: #2a3663;
+        --border-color: #b59f78;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--primary-bg);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: var(--secondary-bg);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px var(--shadow-color);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: var(--text-color);
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      nav a:hover {
+        background-color: var(--accent-color);
+        color: var(--primary-bg);
+        transform: scale(1.05);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px;
+        padding: 20px;
+        background-color: var(--primary-bg);
+        box-shadow: 0 4px 8px var(--shadow-color);
+        margin: 50px auto;
+        border-radius: 10px;
+        animation: fadeIn 0.5s ease-in-out;
+        position: relative;
+        top:20px;
+        overflow: hidden; /* Prevent overflow */
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .timer-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .question-container {
+        margin-bottom: 20px;
+      }
+
+      .question-text {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-size: 16px;
+        resize: none;
+        transition: box-shadow 0.3s ease;
+      }
+
+      textarea:focus {
+        box-shadow: 0 0 8px var(--accent-color);
+        border-color: var(--accent-color);
+      }
+
+      button {
+        background-color: var(--accent-color);
+        color: var(--primary-bg);
+        border: none;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      button:hover {
+        background-color: var(--text-color);
+        color: var(--primary-bg);
+        transform: scale(1.05);
+      }
+
+      footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: var(--text-color);
+        color: var(--primary-bg);
+        text-align: center;
+        padding: 10px 20px;
+        box-shadow: 0 -2px 4px var(--shadow-color);
+      }
+
+      /* Modal-style alert box */
+      .fullscreen-alert {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .fullscreen-alert .alert-box {
+        background-color: var(--secondary-bg);
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .fullscreen-alert button {
+        background-color: var(--accent-color);
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: var(--primary-bg);
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      .fullscreen-alert button:hover {
+        background-color: var(--text-color);
+        color: var(--primary-bg);
+      }
+      #timer {
+        position: fixed;
+        top: 15%;
+        right: 20px;
+        background-color: #ff4c4c; /* Red box */
+        color: #fff; /* White text */
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+        z-index: 100;
+      }
+      footer {
+  position: fixed;
+  bottom: 0;
+  left:0;
+  width: 100%;
+  background-color: var(--text-color);
+  color: var(--primary-bg);
+  text-align: center;
+  padding: 10px 20px;
+  box-shadow: 0 -2px 4px var(--shadow-color);
+  z-index: 10; /* Ensure it stays above other content */
+}
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Exam Portal</h1>
+      <nav>
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="about.html"><i class="fas fa-info-circle"></i> About Us</a>
+        <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="#features"><i class="fas fa-cogs"></i> Features</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="timer-container">
+        <div id="timer">Time Left: <span id="time-left">00:00</span></div>
+        <button id="start-btn" style="margin-left: 50%;" onclick="startTest()">Start Test</button>
+        <button id="stop-btn" style="display:none;" onclick="stopTest()">Stop Test</button>
+      </div>
+
+      <!-- <div id="test-section" style="display: none">
+        
+        <div id="questions-list"></div>
+        <button onclick="submitTest()">Submit</button>
+        <button id="stop-btn" onclick="stopTest()" style="display: none;">Stop Test</button>
+      </div>
+    </div> -->
+    <div id="test-section" style="display: none">
+      <form method="POST" action="/submit">
+        <div id="questions-list">
+          {% for question in questions %}
+            <div class="question-container">
+              <div class="question-text">{{ loop.index }}. {{ question['question_text'] }}</div>
+              <textarea name="answers" placeholder="Your answer..." required></textarea>
+            </div>
+          {% endfor %}
+        </div>
+        </form>
+        </div>
+
+    <footer>
+      <p>&copy; 2024 Exam Portal. All rights reserved.</p>
+    </footer>
+
+    <!-- Custom Fullscreen Alert Box -->
+    <div id="fullscreenAlert" class="fullscreen-alert">
+      <div class="alert-box">
+        <p>
+          You exited fullscreen mode. Please re-enter fullscreen to continue the
+          test.
+        </p>
+        <button onclick="enableFullScreen()">Go Fullscreen</button>
+      </div>
+    </div>
+
+    <script>
+      let timer;
+      let timeLeft = 10 * 60; // example time in seconds (10 minutes)
+      let fullscreenExitCount = 0; // Count how many times fullscreen is exited
+
+      const questions = [
+        "What is the capital of France?",
+        "Explain the theory of relativity.",
+        "Describe the process of photosynthesis.",
+        "What is the chemical formula for water?",
+        "Explain the law of gravity.",
+      ];
+
+      function startTest() {
+        enableFullScreen(); // Automatically enter full screen
+        document.getElementById("test-section").style.display = "block";
+        document.getElementById("start-btn").style.display = "none";
+        document.getElementById("stop-btn").style.display = "inline-block";
+        displayQuestions();
+        timer = setInterval(updateTimer, 1000);
+      }
+
+      function enableFullScreen() {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen(); // Safari
+        } else if (document.documentElement.msRequestFullscreen) {
+          document.documentElement.msRequestFullscreen(); // IE11
+        }
+      }
+
+      // function displayQuestions() {
+      //   const questionContainer = document.getElementById("questions-list");
+      //   questions.forEach((question, index) => {
+      //     const questionDiv = document.createElement("div");
+      //     questionDiv.classList.add("question-container");
+      //     questionDiv.innerHTML = `  
+      //               <div class="question-text">${index + 1}. ${question}</div>
+      //               <textarea placeholder="Your answer..." required></textarea>
+      //           `;
+      //     questionContainer.appendChild(questionDiv);
+      //   });
+      // }
+
+      function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById("time-left").textContent = `${minutes
+          .toString()
+          .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        timeLeft--;
+
+        if (timeLeft < 0) {
+          clearInterval(timer);
+          alert("Time is up!");
+          document.getElementById("test-section").style.display = "none";
+        }
+      }
+      function submitTest() {
+        clearInterval(timer);
+        alert("Test Submitted Successfully!");
+        document.getElementById("test-section").style.display = "none";
+      }
+      document.addEventListener("fullscreenchange", handleFullScreenChange);
+      document.addEventListener(
+        "webkitfullscreenchange",
+        handleFullScreenChange
+      ); // Safari
+      document.addEventListener("mozfullscreenchange", handleFullScreenChange); // Firefox
+      document.addEventListener("msfullscreenchange", handleFullScreenChange); // IE11
+      if (
+        !document.fullscreenElement &&
+        !document.webkitFullscreenElement &&
+        !document.mozFullScreenElement &&
+        !document.msFullscreenElement
+      ) {
+        handleFullScreenChange();
+      }
+      function handleFullScreenChange() {
+        if (
+          !document.fullscreenElement &&
+          !document.webkitFullscreenElement &&
+          !document.mozFullScreenElement &&
+          !document.msFullscreenElement
+        ) {
+          fullscreenExitCount++;
+          document.getElementById("fullscreenAlert").style.display = "flex";
+         
+        } else {
+          document.getElementById("fullscreenAlert").style.display = "none"; // Close alert when in fullscreen
+        }
+      }
+
+      // Close alert box if the user enters fullscreen again
+      function closeAlertBox() {
+        document.getElementById("fullscreenAlert").style.display = "none";
+      }
+
+      // Close alert when clicked outside the box
+      // document
+      //   .getElementById("fullscreenAlert")
+      //   .addEventListener("click", function (e) {
+      //     if (e.target === document.getElementById("fullscreenAlert")) {
+      //       closeAlertBox();
+      //     }
+      //   });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #FAF6E3;
+            --secondary-bg: #D8DBBD;
+            --accent-color: #B59F78;
+            --text-color: #2A3663;
+            --border-color: #B59F78;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            display: flex;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--secondary-bg);
+            box-shadow: 4px 0 10px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar h2 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 270px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            background-color: var(--primary-bg);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin: auto;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .total-marks {
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .question h3 {
+            font-size: 20px;
+            color: var(--accent-color);
+        }
+
+        .show-answer {
+            display: none;
+            margin-top: 10px;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        .motivation {
+            color: #ff6600;
+            font-weight: bold;
+        }
+
+        button {
+            background: var(--accent-color);
+            color: var(--primary-bg);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--text-color);
+        }
+
+        .back-dashboard {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: var(--text-color);
+            color: var(--primary-bg);
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .back-dashboard:hover {
+            background: var(--accent-color);
+        }
+    </style>
+    <script>
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            answer.style.display = (answer.style.display === "none" || answer.style.display === "") ? "block" : "none";
+        }
+    </script>
+</head>
+<body>
+  
+    <div class="main-content">
+        <div class="container">
+            <h1>Test Results</h1>
+            <div class="total-marks">
+                <p><strong>Your Total Marks:</strong> {{ obtained_marks }} / {{ total_marks }}</p>
+            </div>
+            {% for question_id, data in results.items() %}
+            <div class="question">
+                <h3>Question {{ loop.index }}: {{ data['question'] }}</h3>
+                <p><strong>Your Answer:</strong> {{ data['user_answer'] }}</p>
+                <p><strong>Obtained Marks:</strong> {{ data['obtained_marks'] }} / {{ data['total_marks'] }}</p>
+                {% if data['obtained_marks'] == data['total_marks'] %}
+                <p class="feedback correct">Great job! Your answer is correct.</p>
+                {% else %}
+                <p class="motivation">Don't worry, keep going! You'll get better with practice!</p>
+                {% endif %}
+                <button onclick="toggleAnswer('answer-{{ question_id }}')">Show Answer</button>
+                <p id="answer-{{ question_id }}" class="show-answer"><strong>Correct Answer:</strong> {{ data['correct_answer'] }}</p>
+            </div>
+            {% endfor %}
+            <a href="/student" class="back-dashboard">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

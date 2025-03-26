@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pen & Paper Online</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      /* :root {
+            --primary-bg: #FAF6E3;
+            --secondary-bg: #D8DBBD;
+            --accent-color: #B59F78;
+            --text-color: #2A3663;
+            --border-color: #B59F78;  
+            --shadow-color: rgba(0, 0, 0, 0.1);  
+        } */
+      :root {
+        --primary-bg: #fbf5dd; /* light cream */
+        --secondary-bg: #a6cdc6; /* soft greenish-blue */
+        --accent-color: #dda853; /* golden yellow */
+        --text-color: #16404d; /* deep teal */
+        --border-color: #dda853; /* golden yellow */
+        --shadow-color: rgba(0, 0, 0, 0.1); /* shadow color */
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--primary-bg);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: var(--secondary-bg);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px var(--shadow-color);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: var(--text-color);
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      nav a:hover {
+        background-color: var(--accent-color);
+        color: var(--primary-bg);
+        transform: scale(1.05);
+      }
+
+      .hero {
+        text-align: center;
+        padding: 50px 20px;
+        background-color: var(--primary-bg);
+        box-shadow: 0 4px 8px var(--shadow-color);
+      }
+
+      .hero h2 {
+        font-size: 36px;
+        margin-bottom: 20px;
+      }
+
+      .hero p {
+        font-size: 18px;
+        margin-bottom: 30px;
+      }
+
+      .hero button {
+        background-color: var(--accent-color);
+        color: var(--primary-bg);
+        border: none;
+        padding: 12px 25px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .hero button:hover {
+        background-color: var(--text-color);
+        color: var(--primary-bg);
+        transform: scale(1.05);
+      }
+
+      .features {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 40px 20px;
+        background-color: var(--secondary-bg);
+        box-shadow: 0 4px 8px var(--shadow-color);
+      }
+
+      .feature {
+        background-color: var(--primary-bg);
+        border: 1px solid var(--accent-color);
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        width: 250px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .feature:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px var(--shadow-color);
+      }
+
+      .roles {
+        display: flex;
+        justify-content: space-around;
+        padding: 40px 20px;
+        background-color: var(--primary-bg);
+        box-shadow: 0 4px 8px var(--shadow-color);
+      }
+
+      .role {
+        text-align: center;
+        max-width: 300px;
+      }
+
+      .role i {
+        font-size: 100px;
+        color: var(--accent-color);
+        transition: transform 0.2s ease, color 0.3s ease;
+      }
+
+      .role:hover i {
+        transform: scale(1.1);
+        color: var(--text-color);
+      }
+
+      .role h4 {
+        margin: 10px 0;
+      }
+
+      .scroll-icons {
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+        background-color: var(--secondary-bg);
+        box-shadow: 0 2px 4px var(--shadow-color);
+      }
+
+      .scroll-icons i {
+        font-size: 36px;
+        margin: 0 10px;
+        color: var(--accent-color);
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .scroll-icons i:hover {
+        color: var(--text-color);
+      }
+
+      footer {
+        background-color: var(--text-color);
+        color: var(--primary-bg);
+        text-align: center;
+        padding: 10px 20px;
+        box-shadow: 0 -2px 4px var(--shadow-color);
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'header.html' %}
+
+    <section class="hero">
+      <h2>Welcome to Pen & Paper Online</h2>
+      <p>Conduct seamless assessments and tests with ease and efficiency.</p>
+      <button><i class="fas fa-arrow-right"></i> Get Started</button>
+    </section>
+
+    <section id="features" class="features">
+      <div class="feature">
+        <h3><i class="fas fa-lock"></i></h3>
+        <h3>Secure and Reliable Platform</h3>
+        <p>
+          Ensure that assessments are protected with robust security features.
+        </p>
+      </div>
+      <div class="feature">
+        <h3><i class="fas fa-chart-line"></i></h3>
+        <h3>Real-time Monitoring & Analytics</h3>
+        <p>
+          Monitor progress and generate insightful analytics during assessments.
+        </p>
+      </div>
+      <div class="feature">
+        <h3><i class="fas fa-user-friends"></i></h3>
+        <h3>User-friendly Interface</h3>
+        <p>
+          Provide a simple, intuitive interface for administrators, instructors,
+          and participants.
+        </p>
+      </div>
+    </section>
+
+    <section class="roles">
+      <div class="role">
+        <i class="fas fa-user-shield"></i>
+        <h4>Admin</h4>
+        <p>
+          Manage and oversee the entire assessment process with administrative
+          controls.
+        </p>
+      </div>
+      <div class="role">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <h4>Instructor</h4>
+        <p>
+          Create, monitor, and evaluate assessments with ease for participants.
+        </p>
+      </div>
+      <div class="role">
+        <i class="fas fa-user-graduate"></i>
+        <h4>Participant</h4>
+        <p>Access assessments, participate securely, and track performance.</p>
+      </div>
+    </section>
+
+    {% include 'footer.html' %}
+  </body>
+</html>

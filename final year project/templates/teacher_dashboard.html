@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background: #f4f4f4;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #2A3663;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #1c2541;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .btn {
+            margin: 5px;
+        }
+
+        .question-box {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .btn-remove {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-remove:hover {
+            background: #cc0000;
+        }
+    </style>
+    <script>
+        function showContent(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function addQuestion() {
+            const questionContainer = document.getElementById("questionContainer");
+            const questionHTML = `
+                <div class="question-box">
+                    <div class="mb-2">
+                        <textarea name="question[]" class="form-control" rows="3" placeholder="Enter Question" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <textarea name="answer[]" class="form-control" rows="4" placeholder="Enter Answer (Longer Answer Supported)" required></textarea>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" name="marks[]" class="form-control" placeholder="Marks" required>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <button type="button" class="btn-remove" onclick="removeQuestion(this)">Remove</button>
+                        </div>
+                    </div>
+                </div>`;
+            questionContainer.insertAdjacentHTML('beforeend', questionHTML);
+        }
+
+        function removeQuestion(button) {
+            button.closest('.question-box').remove();
+        }
+    </script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Teacher Dashboard</h2>
+        <a onclick="showContent('dashboard')"><i class="fas fa-home"></i> Home</a>
+        <a onclick="showContent('create-exam')"><i class="fas fa-plus"></i> Create Exam</a>
+        <a onclick="showContent('upcoming-exams')"><i class="fas fa-calendar-alt"></i> Upcoming Exams</a>
+        <a onclick="showContent('past-exams')"><i class="fas fa-history"></i> Past Exams</a>
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <section id="dashboard" class="section active">
+            <h1>Welcome to the Teacher Dashboard</h1>
+            <p>Select an option from the sidebar.</p>
+        </section>
+
+        <section id="create-exam" class="section">
+            <h2>Create Exam</h2>
+            <form id="examForm" action="/add_exam" method="POST" class="mb-4">
+                <div class="mb-3">
+                    <input type="text" name="subject" class="form-control" placeholder="Subject" required>
+                </div>
+                <div class="mb-3">
+                    <input type="date" name="date" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <input type="time" name="time" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <input type="number" name="time_limit" class="form-control" placeholder="Time Limit (mins)"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <select class="form-select" name="department" required>
+                        <option value="" disabled selected >Select Department</option>
+                        {% for dept in departments %}
+                        <option value="{{ dept[0] }}">{{ dept[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <select class="form-select" name="batch" required>
+                        <option value="" disabled selected >Select Batch</option>
+                        {% for batch in batches %}
+                        <option value="{{ batch[0] }}">{{ batch[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <h3>Questions</h3>
+                <div id="questionContainer"></div>
+                <button type="button" class="btn btn-primary" onclick="addQuestion()">Add Question</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </section>
+
+        <section id="upcoming-exams" class="section">
+            <h2>Ongoing/Upcoming Exams</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in upcoming_exams %}
+                    <tr>
+                        <td>{{ exam[1] }}</td>
+                        <td>{{ exam[2] }}</td>
+                        <td>{{ exam[3] }}</td>
+                        <td><button class="btn btn-primary" onclick="window.location.href='#'">View Test</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="past-exams" class="section">
+            <h2>Past Exams</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in past_exams %}
+                    <tr>
+                        <td>{{ exam[1] }}</td>
+                        <td>{{ exam[2] }}</td>
+                        <td><button class="btn btn-info" onclick="fetchExamResults({{ exam[0] }})">View Result</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <section id="exam-results" class="section">
+            <h2>Exam Analysis</h2>
+            <div id="results-container">
+
+            </div>
+        </section>
+
+    </div>
+    <script>
+        function fetchExamResults(examId) {
+            fetch(`/view_results/${examId}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("results-container").innerHTML = data;
+                    showContent('exam-results');
+                })
+                .catch(error => console.error('Error fetching results:', error));
+        }
+    </script>
+</body>
+
+</html>

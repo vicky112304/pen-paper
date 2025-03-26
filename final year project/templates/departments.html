@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments - Pen and Paper Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-bg);
+            padding: 20px;
+            box-shadow: 2px 0 4px var(--shadow-color);
+        }
+
+        .sidebar h1 {
+            color: var(--text-color);
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--primary-bg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--secondary-bg);
+        }
+
+        form button {
+            padding: 8px 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        form button i {
+            margin-right: 8px;
+        }
+
+        form button.edit {
+            background-color: green;
+        }
+
+        form button.delete {
+            background-color: red;
+        }
+
+        form button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        form a.add-department {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            color: white;
+            background-color: var(--accent-color);
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        form a.add-department:hover {
+            background-color: darken(var(--accent-color), 10%);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <h1>Pen and Paper Online</h1>
+        <a href="dashboard.html"><i class="fas fa-home"></i> Home</a>
+        <a href="manage-students.html"><i class="fas fa-user-graduate"></i> Manage Students</a>
+        <a href="manage-teachers.html"><i class="fas fa-chalkboard-teacher"></i> Manage Teachers</a>
+        <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <header>
+            <h1>Departments</h1>
+        </header>
+
+        <a href="{{ url_for('add_department') }}" class="add-department">Add New Department</a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for department in departments %}
+                    <tr>
+                        <td>{{ department[0] }}</td>
+                        <td>{{ department[1] }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_department', id=department[0]) }}" method="POST" style="display:inline-block;">
+                                <button type="submit" class="delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                            <a href="{{ url_for('edit_department', id=department[0]) }}" style="margin-left: 5px;">
+                                <button type="button" class="edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

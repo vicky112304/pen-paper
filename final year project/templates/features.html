@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Features - Pen & Paper Online</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-bg: #fbf5dd; 
+        --secondary-bg: #a6cdc6;
+        --accent-color: #dda853;
+        --text-color: #16404d;
+        --border-color: #dda853;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: var(--primary-bg);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: var(--secondary-bg);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px var(--shadow-color);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: var(--text-color);
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      nav a:hover {
+        background-color: var(--accent-color);
+        color: var(--primary-bg);
+        transform: scale(1.05);
+      }
+      section {
+        padding: 40px 20px;
+        height: 50vh;
+      }
+
+      .features {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        /* background-color: var(--secondary-bg); */
+        
+        box-shadow: 0 4px 10px var(--shadow-color);
+      }
+
+      .feature {
+        background-color: var(--primary-bg);
+        border: 1px solid var(--accent-color);
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        width: 250px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .feature:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px var(--shadow-color);
+      }
+
+      .feature h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+
+      .feature p {
+        font-size: 16px;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        width:100%;
+        background-color: var(--text-color);
+        color: var(--primary-bg);
+        text-align: center;
+        padding: 10px 20px;
+        box-shadow: 0 -2px 4px var(--shadow-color);
+      }
+    </style>
+  </head>
+  <body>
+    {% include "header.html" %}
+    <section id="features" class="features">
+      <div class="feature">
+        <h3><i class="fas fa-lock"></i></h3>
+        <h3>Secure and Reliable Platform</h3>
+        <p>
+          Ensure that assessments are protected with robust security features.
+        </p>
+      </div>
+      <div class="feature">
+        <h3><i class="fas fa-chart-line"></i></h3>
+        <h3>Real-time Monitoring & Analytics</h3>
+        <p>
+          Monitor progress and generate insightful analytics during assessments.
+        </p>
+      </div>
+      <div class="feature">
+        <h3><i class="fas fa-user-friends"></i></h3>
+        <h3>User-friendly Interface</h3>
+        <p>
+          Provide a simple, intuitive interface for administrators, instructors,
+          and participants.
+        </p>
+      </div>
+    </section>
+
+    {% include "footer.html" %}
+  </body>
+</html>

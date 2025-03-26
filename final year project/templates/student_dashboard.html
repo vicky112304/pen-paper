@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #FAF6E3;
+            --secondary-bg: #D8DBBD;
+            --accent-color: #B59F78;
+            --text-color: #2A3663;
+            --hover-bg: #6b5b95;
+            --border-color: #B59F78;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-bg: #FFFFFF;
+            --button-hover-bg: #8A7B3F;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            display: flex;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--secondary-bg);
+            box-shadow: 4px 0 10px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar h2 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 270px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .card button {
+            padding: 12px 25px;
+            margin-top: 15px;
+            border: none;
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .card button:hover {
+            background-color: var(--button-hover-bg);
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+        .no-exams {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--text-color);
+        width:100%;
+        background-color: var(--secondary-bg);
+        padding: 15px;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        margin-top: 20px;
+    }
+    </style>
+    <script>
+        function showContent(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.add('hidden'));
+            const selectedSection = document.getElementById(sectionId);
+            selectedSection.classList.remove('hidden');
+        }
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <a onclick="showContent('upcoming-exams')"><i class="fas fa-calendar-alt"></i> Ongoing/Upcoming Exams</a>
+        <a onclick="showContent('past-exams')"><i class="fas fa-history"></i> Past Exams</a>
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>    
+    </div>
+
+    <div class="main-content">
+        <h1>Welcome to the Student Dashboard</h1>
+        <section id="upcoming-exams" class="section hidden">
+            <h2 class="section-title">Ongoing/Upcoming Exams</h2>
+            <div class="section-content">
+                {% if upcoming_exams %}
+                    {% for exam in upcoming_exams %}
+                    <div class="card">
+                        <h3>{{ exam[1] }}</h3>
+                        <p><strong>Date:</strong> {{ exam[2] }} <strong>Time:</strong> {{ exam[3] }}</p>
+                        <button onclick="window.location.href='/test/{{ exam[0] }}'">Start Test</button>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-exams">No upcoming exams at the moment. Stay tuned!</p>
+                {% endif %}
+            </div>
+        </section>
+        <section id="past-exams" class="section hidden">
+            <h2 class="section-title">Past Exams</h2>
+            <div class="section-content">
+                {% if past_exams %}
+                {% for exam in past_exams %}
+                <div class="card">
+                    <h3>{{ exam[1] }}</h3>
+                    <p><strong>Date:</strong> {{ exam[2] }} <strong>Time:</strong> {{ exam[2] }}</p>
+                    <button onclick="window.location.href='/view_result/{{ exam[0] }}'">View Result</button>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="no-exams">No upcoming exams at the moment. Stay tuned!</p>
+            {% endif %}
+            </div>
+        </section>
+    </div>
+</body>
+</html>

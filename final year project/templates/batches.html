@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batches - Pen and Paper Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Your existing styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-bg);
+            padding: 20px;
+            box-shadow: 2px 0 4px var(--shadow-color);
+        }
+
+        .sidebar h1 {
+            color: var(--text-color);
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--primary-bg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--secondary-bg);
+        }
+
+        form button {
+            padding: 5px 10px;
+            color: white;
+            background-color: var(--accent-color);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form button:hover {
+            background-color: darken(var(--accent-color), 10%);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <h1>Pen and Paper Online</h1>
+        <a href="dashboard.html"><i class="fas fa-home"></i> Home</a>
+        <a href="manage-students.html"><i class="fas fa-user-graduate"></i> Manage Students</a>
+        <a href="manage-teachers.html"><i class="fas fa-chalkboard-teacher"></i> Manage Teachers</a>
+        <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="content">
+        <header>
+            <h1>Batches</h1>
+        </header>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Batch Name</th>
+                    <th>Department ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for batch in batches %}
+                    <tr>
+                        <td>{{ batch.id }}</td>
+                        <td>{{ batch.name }}</td>
+                        <td>{{ batch.department_id }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_batch', id=batch.id) }}" method="POST">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('add_batch') }}">Add New Batch</a>
+    </div>
+</div>
+
+</body>
+</html>

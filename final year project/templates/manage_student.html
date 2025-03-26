@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        .btn {
+            padding: 8px 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn-add {
+            background-color: green;
+        }
+        .btn-edit {
+            background-color: blue;
+        }
+        .btn-delete {
+            background-color: red;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 40%;
+        }
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Manage Students</h1>
+
+    <button class="btn btn-add" onclick="openModal()">Add New Student</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Batch</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student[0] }}</td>
+                <td>{{ student[1] }}</td>
+                <td>{{ student[2] }}</td>
+                <td>{{ student[3] }}</td>
+                <td>{{ student[4] }}</td>
+                <td>
+                    <button class="btn btn-edit" onclick="openEditModal({{ student[0] }}, '{{ student[1] }}', {{ student[2] }}, '{{ student[3] }}', '{{ student[4] }}')">Edit</button>
+                    <form action="{{ url_for('delete_student', id=student[0]) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Student Modal -->
+<div id="studentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Add Student</h2>
+        <form id="studentForm" method="POST" action="{{ url_for('add_student') }}">
+            <input type="hidden" id="studentId" name="id">
+            <label>Name:</label>
+            <input type="text" name="name" id="name" required>
+            <label>Age:</label>
+            <input type="number" name="age" id="age" required>
+            <label>Email:</label>
+            <input type="email" name="email" id="email" required>
+            <label>Department:</label>
+            <select name="department_id" id="department_id">
+                {% for department in departments %}
+                <option value="{{ department[0] }}">{{ department[1] }}</option>
+                {% endfor %}
+            </select>
+            <label>Batch:</label>
+            <select name="batch_id" id="batch_id">
+                {% for batch in batches %}
+                <option value="{{ batch[0] }}">{{ batch[1] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-add">Save</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById("modalTitle").innerText = "Add Student";
+        document.getElementById("studentForm").action = "{{ url_for('add_student') }}";
+        document.getElementById("studentId").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("age").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("department_id").value = "";
+        document.getElementById("batch_id").value = "";
+        document.getElementById("studentModal").style.display = "block";
+    }
+
+    function openEditModal(id, name, age, email, department, batch) {
+        document.getElementById("modalTitle").innerText = "Edit Student";
+        document.getElementById("studentForm").action = "/edit-student/" + id;
+        document.getElementById("studentId").value = id;
+        document.getElementById("name").value = name;
+        document.getElementById("age").value = age;
+        document.getElementById("email").value = email;
+        document.getElementById("department_id").value = department;
+        document.getElementById("batch_id").value = batch;
+        document.getElementById("studentModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("studentModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("studentModal")) {
+            closeModal();
+        }
+    }
+</script>
+
+</body>
+</html>
